@@ -9,7 +9,7 @@ export default (app: any) => {
       res.locals.isLoggedIn = req.cookies[config.cookie] !== 'undefined';
     }
     if (req.user) {
-      res.locals.username = req.user;
+      res.locals.userName = req.user;
       console.log(`${req.user} has logged in.`);
     }
     next();
