@@ -1,10 +1,13 @@
 import { config } from "../config/config";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import express from "express";
+const cors = require('cors');
 
 export default (app: any) => {
 
+  app.use(cors());
   app.use((req: any, res: any, next: any) => {
+
     if (req.cookies) {
       res.locals.isLoggedIn = req.cookies[config.cookie] !== 'undefined';
     }
@@ -16,6 +19,5 @@ export default (app: any) => {
   });
 
   app.use(cookieParser());
-
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
 };

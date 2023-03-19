@@ -18,7 +18,7 @@ class UserConproller {
   }
 
   private findUser(user: IUser, req: any, res: any, next: any) {
-    models.User.findOne({ userName: { $eq: user.userName } })
+    models.User.findOne({ username: { $eq: user.username } })
       .then((user) => {
         if (user === null) {
           res.status(401).send({ error: 'No such user found!' });
@@ -45,16 +45,18 @@ class UserConproller {
 
   public post = {
     register: (req: any, res: any, next: any) => {
-      const { userName, email } = req.body;
-      const newUser: IUser = { userName, email };
+      const { username, email, password } = req.body;
+      const newUser: IUser = { username, email, password };
       this.createUser(newUser, req, res, next);
     },
     login: (req: any, res: any, next: any) => {
-      const { userName, email } = req.body;
-      const newUser: IUser = { userName, email };
+      const { username, password, stayLoggedIn } = req.body;
+      console.log(stayLoggedIn);
+
+      const newUser: IUser = { username, password };
       this.findUser(newUser, req, res, next);
     }
   }
 }
 
-export default new UserConproller();
+export default new UserConproller(); 
