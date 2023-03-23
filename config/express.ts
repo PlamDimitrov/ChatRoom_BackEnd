@@ -5,7 +5,11 @@ const cors = require('cors');
 
 export default (app: any) => {
 
-  app.use(cors());
+  app.use(cors({
+    origin: 'http://localhost:4200',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
   app.use((req: any, res: any, next: any) => {
 
     if (req.cookies) {

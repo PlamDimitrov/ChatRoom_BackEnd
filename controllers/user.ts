@@ -17,15 +17,24 @@ class UserConproller {
       })
   }
 
-  private findUser(user: IUser, req: any, res: any, next: any) {
-    models.User.findOne({ username: { $eq: user.username } })
+  private findUser(stayLoggedIn: Boolean, userFromClient: IUser, req: any, res: any, next: any) {
+    models.User.findOne({ username: { $eq: userFromClient.username } })
       .then((user) => {
         if (user === null) {
           res.status(401).send({ error: 'No such user found!' });
           return;
         } else {
-          res.cookie(config.cookie, user)
-            .send(user)
+          if (user.password === userFromClient.password) {
+            const now = new Date();
+            const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const oneDay = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            stayLoggedIn
+              ? res.cookie(config.cookie, JSON.stringify(user), { expires: nextWeek })
+              : res.cookie(config.cookie, JSON.stringify(user), { expires: oneDay })
+            res.send(user)
+          } else {
+            res.status(401).send('Wrong password!');
+          }
         }
       }).catch(err => {
         console.log(err);
@@ -51,10 +60,8 @@ class UserConproller {
     },
     login: (req: any, res: any, next: any) => {
       const { username, password, stayLoggedIn } = req.body;
-      console.log(stayLoggedIn);
-
       const newUser: IUser = { username, password };
-      this.findUser(newUser, req, res, next);
+      this.findUser(stayLoggedIn, newUser, req, res, next);
     }
   }
 }
