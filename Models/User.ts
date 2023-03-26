@@ -3,7 +3,7 @@ import IUser from '../Interfaces/IUser';
 
 const Model = mongoose.model;
 
-const { String, Number, Boolean, ObjectId } = Schema.Types;
+const { String } = Schema.Types;
 
 const userSchema = new Schema<IUser>({
 
