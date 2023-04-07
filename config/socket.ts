@@ -18,6 +18,7 @@ export default class Socket {
 
     io.on('connection', (socket) => {
       console.log(`Connected id: ${socket.id}`);
+      console.log(`Connected at room : ${socket}`);
 
       socket.on('message-form-client', message => {
         io.emit('message-from-server', message);
