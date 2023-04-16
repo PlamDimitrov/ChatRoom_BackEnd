@@ -7,6 +7,7 @@ import routes from './config/routes';
 const application = app();
 const socket = new Socket(application);
 
+
 database()
   .then(() => {
     express(application, app);
@@ -14,3 +15,5 @@ database()
     application.listen(config.port, () => console.log(`Server active on port: ${config.port}_____________________________________________`));
     socket.createServer(config.socketPort, () => console.log(`Socket active on port: ${config.socketPort}_____________________________________________`));
   });
+
+global.AppGlobal = socket;

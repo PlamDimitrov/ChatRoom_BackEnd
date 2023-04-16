@@ -1,5 +1,4 @@
 import models from '../Models';
-import { config } from '../config/config';
 import IChatRoom from '../Interfaces/IChatRoom';
 
 class ChatRoomConproller {
@@ -10,6 +9,15 @@ class ChatRoomConproller {
         res.status(200);
         res.send(room);
       })
+      .then(
+        global.AppGlobal.io.on('connection', (socket: any) => {
+          console.log(`Connected id: ${socket.id}`);
+          console.log(socket);
+          socket.on('message-form-client', (message: any) => {
+            global.AppGlobal.io.emit('message-from-server', message);
+          })
+        })
+      )
       .catch(err => {
         console.log(err);
         res.status(409)
@@ -34,7 +42,9 @@ class ChatRoomConproller {
   }
 
   public post = {
+
     createRoom: (req: any, res: any, next: any) => {
+      console.log('connected!');
       const { chatRoomName } = req.body;
       this.createChatRoom(chatRoomName, req, res, next);
     },
